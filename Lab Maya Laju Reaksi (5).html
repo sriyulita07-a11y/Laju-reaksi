@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lab Maya Laju Reaksi</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#071a1d;font-family:"Trebuchet MS","Segoe UI",sans-serif;color:#12262a}
+#st{position:absolute;left:50%;top:50%;width:720px;height:1280px;background:#eaf1ee;transform-origin:center;overflow:hidden}
+header{height:96px;background:#12353b;display:flex;flex-wrap:wrap;align-content:center;align-items:center;padding:0 12px;gap:6px}
+header h1{font-size:21px;color:#fff;order:1;flex:0 0 calc(100% - 122px);white-space:nowrap}
+header h1 span{color:#f2b134}
+.tb{background:transparent;border:0;color:#bcd6d3;font:600 14px inherit;font-family:inherit;padding:9px 4px;order:3;flex:1 1 0;border-radius:6px;cursor:pointer}
+.tb.on{background:#f2b134;color:#12262a}.tb:hover:not(.on){background:#1f4a51}
+#mu{order:2;flex:0 0 auto;margin-left:0;padding:9px 10px}
+.tab{display:none;height:1184px;padding:14px 18px;gap:14px;align-content:start}.tab.on{display:grid}
+.p{background:#fff;border:1px solid #c9d8d4;border-radius:10px;padding:12px 14px;overflow:hidden}
+h2{font-size:20px;margin-bottom:6px;color:#0d4c55}h3{font-size:16px;margin:6px 0 3px;color:#0d4c55}
+p,li,td,th,label{font-size:15.5px;line-height:1.45}li{margin-left:18px}
+.btn{font-family:inherit;font-weight:700;font-size:15px;border:0;border-radius:7px;padding:8px 14px;cursor:pointer;background:#0d4c55;color:#fff}
+.btn:hover{background:#13707c}.btn.o{background:#f2b134;color:#12262a}.btn.r{background:#c4452f}.btn:disabled{opacity:.45;cursor:not-allowed}
+.ex{background:#dbe8e4;color:#12262a}.ex.on{background:#0d4c55;color:#fff}
+table{border-collapse:collapse;width:100%}th,td{border:1px solid #c9d8d4;padding:4px 6px;text-align:center}th{background:#dbe8e4}
+input,textarea,select{font-family:inherit;font-size:15px;border:1px solid #9fb9b4;border-radius:6px;padding:5px 7px;width:100%}
+textarea{resize:none;height:62px}
+canvas{display:block;border-radius:8px;background:#f7fbfa}
+.g2{grid-template-columns:1fr}.g3{grid-template-columns:1fr 1fr}
+.opt{display:block;width:100%;text-align:left;margin:4px 0;background:#e7f0ed;color:#12262a;font-weight:500}
+.opt.good{background:#2f9e5b;color:#fff}.opt.bad{background:#c4452f;color:#fff}
+#toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:#12353b;color:#fff;padding:9px 18px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+.sp{position:absolute;inset:0;z-index:20;background:radial-gradient(circle at 50% 40%,#1b5e68,#0a2a30 75%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;transition:opacity .5s}
+.sp.out{opacity:0;pointer-events:none}.sp h1{font-size:54px;line-height:1.1;margin:10px 0}.sp h1 span{color:#f2b134}
+.sp p{font-size:19px;color:#cfe5e2;max-width:760px}.sp .btn{font-size:20px;padding:14px 38px;margin-top:30px;background:#f2b134;color:#12262a}
+.sp i{position:absolute;bottom:-60px;border:2px solid rgba(255,255,255,.45);border-radius:50%;animation:up 8s linear infinite}
+@keyframes up{to{transform:translateY(-1400px)}}
+.big{font:700 22px inherit;font-family:inherit;color:#c4452f}
+</style></head><body>
+<div id="st">
+<header><h1>Lab Maya <span>Laju Reaksi</span></h1>
+<button class="tb on" data-t="0">Teori</button><button class="tb" data-t="1">Prosedur</button><button class="tb" data-t="2">Simulasi</button><button class="tb" data-t="3">LKPD</button><button class="tb" data-t="4">Pengembang</button>
+<button class="tb" id="mu">🔊 Suara</button></header>
+
+<section class="tab g2 on" id="t0">
+<div class="p"><h2>Teori tumbukan</h2><p>Reaksi terjadi bila partikel saling bertumbukan dengan energi minimum (energi aktivasi, Ea) dan arah yang tepat. Tumbukan seperti itu disebut <b>tumbukan efektif</b>. Laju reaksi naik jika jumlah tumbukan efektif per satuan waktu bertambah.</p>
+<h3>Laju reaksi rata-rata</h3><p>v = −Δ[A] / Δt, satuan mol L⁻¹ s⁻¹. Contoh: [A] turun dari 0,80 ke 0,20 mol L⁻¹ dalam 30 s, maka v = 0,60 / 30 = 0,020 mol L⁻¹ s⁻¹.</p>
+<h3>Laju relatif</h3><p>Pada eksperimen simulasi ini, laju relatif = 1 / waktu reaksi (s⁻¹) dengan anggapan tingkat penyelesaian reaksi sama. Ini bukan laju konsentrasi.</p>
+<h3>Pengaruh suhu (pendekatan)</h3><p>v₂ = v₁ × 2<sup>(T₂−T₁)/10</sup>. Aturan ini hanya pendekatan untuk reaksi tertentu, jadi data eksperimen tetap diperlukan.</p></div>
+<div class="p"><h2>Empat faktor yang memengaruhi laju</h2>
+<h3>Suhu</h3><p>Energi kinetik partikel naik, tumbukan lebih sering dan lebih banyak yang melewati Ea.</p>
+<h3>Konsentrasi</h3><p>Partikel per satuan volume bertambah sehingga frekuensi tumbukan naik. Hubungan kuantitatifnya bergantung pada orde reaksi.</p>
+<h3>Luas permukaan</h3><p>Serbuk memiliki bidang kontak lebih luas daripada bongkahan sehingga lebih banyak partikel dapat ditumbuk.</p>
+<h3>Katalis</h3><p>Menyediakan jalur reaksi dengan Ea lebih rendah. Katalis tidak habis bereaksi secara keseluruhan.</p>
+<p style="margin-top:8px"><b>Misi:</b> jalankan keempat eksperimen di tab Simulasi, lalu kerjakan LKPD.</p></div>
+</section>
+
+<section class="tab g2" id="t1">
+<div class="p"><h2>Prosedur kerja</h2><ol>
+<li>Tab LKPD: isi nama, kelas, dan tulis prediksi awalmu (Aktivitas 1).</li>
+<li>Tab Simulasi: pilih satu eksperimen (Suhu, Konsentrasi, Luas permukaan, Katalis).</li>
+<li>Geser pengaturan variabel, lalu tekan <b>Jalankan</b>.</li>
+<li>Amati partikel dan waktu. Hasil masuk ke tabel dan grafik secara otomatis.</li>
+<li>Ulangi semua nilai variabel pada eksperimen itu, lalu lanjut ke eksperimen berikutnya.</li>
+<li>Analisis laju relatif dan tulis kesimpulan di LKPD.</li>
+<li>Gunakan kalkulator untuk Aktivitas 3, kerjakan kuis, isi refleksi.</li>
+<li>Tekan <b>Unduh hasil (PDF)</b> dan kirim ke gurumu.</li></ol></div>
+<div class="p"><h2>Variabel tiap eksperimen</h2>
+<table><tr><th>Eksperimen</th><th>Variabel bebas</th><th>Dikendalikan</th></tr>
+<tr><td>A. Suhu</td><td>20, 30, 40, 50°C</td><td>Massa, ukuran tablet, volume air</td></tr>
+<tr><td>B. Konsentrasi</td><td>1×, 2×, 3×</td><td>Volume, luas logam, suhu</td></tr>
+<tr><td>C. Luas permukaan</td><td>Bongkahan, butiran, serbuk</td><td>Massa, suhu, volume</td></tr>
+<tr><td>D. Katalis</td><td>Tanpa / dengan</td><td>Pereaksi, suhu</td></tr></table>
+<h3 style="margin-top:12px">Catatan</h3><p>Angka adalah data simulasi pembelajaran, bukan hasil pengukuran nyata. Suhu 50°C diperoleh dari model penggandaan laju setiap kenaikan 10°C. Waktu simulasi dipercepat 10 kali agar cepat diamati.</p></div>
+</section>
+
+<section class="tab" id="t2" style="grid-template-columns:1fr">
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;gap:6px" id="exb"></div>
+<canvas id="cv" width="580" height="400" style="width:88%;height:auto;margin:0 auto"></canvas>
+<div class="p" style="display:flex;align-items:center;gap:10px;padding:8px 12px">
+<div style="flex:1"><label id="sl">Variabel</label><input type="range" id="rg" min="0" value="0"></div>
+<button class="btn o" id="go">▶ Jalankan</button><button class="btn r" id="rs">Reset</button></div></div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div class="p" style="flex:1"><h2 id="tt">Tabel hasil</h2><div id="tbl"></div><p id="nt" style="margin-top:8px;color:#0d4c55;font-weight:600"></p></div>
+<div class="p"><h2>Grafik waktu reaksi</h2><canvas id="ch" width="620" height="210" style="width:100%;height:auto"></canvas></div></div>
+</section>
+
+<section class="tab g3" id="t3">
+<div class="p"><h2>Identitas dan jawaban</h2>
+<label>Nama</label><input id="nm"><label>Kelas</label><input id="kl">
+<label>Prediksi awal dan alasan ilmiah (Aktivitas 1)</label><textarea id="pr"></textarea>
+<label>Kesimpulan dari data eksperimen</label><textarea id="ks"></textarea>
+<label>Pengetahuan baru yang paling bermakna</label><textarea id="rf2" style="height:48px"></textarea>
+<label>Seberapa paham kamu?</label><select id="rf"><option>Sangat paham dan dapat menjelaskan kembali</option><option>Cukup paham, masih perlu latihan</option><option>Masih memerlukan bantuan guru</option></select></div>
+<div class="p"><h2>Kalkulator laju reaksi</h2>
+<h3>Laju rata-rata v = −Δ[A]/Δt</h3>
+<label>[A] awal (mol L⁻¹)</label><input type="number" id="c0" value="0.80" step="any"><label>[A] akhir (mol L⁻¹)</label><input type="number" id="c1" value="0.20" step="any"><label>Waktu Δt (s)</label><input type="number" id="dt" value="30" step="any">
+<button class="btn" id="b1" style="margin:6px 0">Hitung v</button><p id="o1" class="big">–</p>
+<h3>Pengaruh suhu v₂ = v₁ × 2^((T₂−T₁)/10)</h3>
+<div style="display:flex;gap:6px"><input type="number" id="v1" value="0.015" step="any" title="v1"><input type="number" id="t1" value="20" title="T1"><input type="number" id="t2" value="40" title="T2"></div>
+<p style="font-size:12px">kolom: v₁, T₁ (°C), T₂ (°C)</p>
+<button class="btn" id="b2" style="margin:6px 0">Hitung v₂</button><p id="o2" class="big">–</p></div>
+<div class="p" style="grid-column:1/-1"><h2>Kuis <span id="qs" style="font-size:13px;color:#555"></span></h2><div id="qz"></div>
+<button class="btn o" id="pdf" style="margin-top:14px;width:100%;padding:13px">⬇ Unduh hasil (PDF)</button></div>
+</section>
+
+<section class="tab" id="t4" style="grid-template-columns:1fr">
+<div class="p" style="max-width:760px;margin:60px auto;height:420px;text-align:center"><h2 style="font-size:24px">Pengembang</h2>
+<p style="font-size:20px;margin-top:22px"><b>Sri Yulita, S.Pd</b></p><p style="font-size:16px">SMA Negeri 2 Tebing Tinggi</p>
+<p style="margin-top:18px;font-size:15px">Lab Maya Laju Reaksi dikembangkan dari LKM "Misi Ilmuwan Muda: Mengungkap Rahasia Cepat-Lambatnya Reaksi" untuk pembelajaran Kimia SMA. Berjalan penuh di peramban tanpa koneksi internet.</p>
+<p style="margin-top:14px;font-size:13px;color:#555">Data eksperimen adalah data simulasi pembelajaran, bukan hasil pengukuran nyata.</p></div>
+</section>
+<div class="sp" id="sp"><p style="font-size:17px">Lab Maya Kimia • Kelas XI</p><h1>Misi Ilmuwan Muda:<br><span>Laju Reaksi</span></h1><p>Ungkap rahasia cepat-lambatnya reaksi lewat empat eksperimen: suhu, konsentrasi, luas permukaan, dan katalis.</p><button class="btn" id="mulai">Mulai Misi</button><p style="font-size:15px;margin-top:34px">Sri Yulita, S.Pd • SMA Negeri 2 Tebing Tinggi</p></div>
+<div id="toast"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id),fmt=(n,d=5)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+const st=$('st');function fit(){const s=Math.min(innerWidth/720,innerHeight/1280);st.style.transform='translate(-50%,-50%) scale('+s+')'}
+addEventListener('resize',fit);fit();
+/* suara */
+let AC,mute=false;
+function tone(f,d=.12,t='sine',v=.12,at=0){if(mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume();const o=AC.createOscillator(),g=AC.createGain(),s=AC.currentTime+at;o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+d)}catch(e){}}
+const sfx={click:()=>tone(660,.06,'square',.05),ok:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.16,'sine',.14,i*.09)),no:()=>tone(150,.3,'sawtooth',.09),pop:()=>tone(350+Math.random()*500,.05,'sine',.04)};
+document.addEventListener('click',e=>{if(e.target.closest('button'))sfx.click()});
+$('mu').onclick=()=>{mute=!mute;$('mu').textContent=mute?'🔇 Senyap':'🔊 Suara'};
+function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.opacity=0,2600)}
+document.querySelectorAll('.tb[data-t]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tb[data-t]').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.tab').forEach((s,i)=>s.classList.toggle('on',i==b.dataset.t))});
+/* data eksperimen */
+const EX=[
+{n:'Suhu',v:[20,30,40,50],lb:v=>v+'°C',t:v=>120/Math.pow(2,(v-20)/10),k:'Semakin tinggi suhu, semakin singkat waktu dan semakin besar laju relatif: tumbukan efektif bertambah.'},
+{n:'Konsentrasi',v:[1,2,3],lb:v=>'Konsentrasi '+v+'×',t:v=>60/v,k:'Konsentrasi lebih besar menaikkan frekuensi tumbukan sehingga laju naik (pada model ini berbanding lurus).'},
+{n:'Luas permukaan',v:[1,3,6],lb:v=>({1:'Bongkahan',3:'Butiran',6:'Serbuk'})[v],t:v=>({1:90,3:45,6:30})[v],k:'Padatan yang lebih halus punya bidang kontak lebih luas sehingga bereaksi lebih cepat.'},
+{n:'Katalis',v:[0,1],lb:v=>v?'Dengan katalis':'Tanpa katalis',t:v=>v?25:100,k:'Katalis menurunkan energi aktivasi sehingga laju menjadi 4 kali lebih besar dan katalis tidak habis.'}];
+let ex=0,vi=[0,0,0,0],rec=[[],[],[],[]],run=false,prog=0,tdur=1,bub=[],spk=[];
+const val=()=>EX[ex].v[vi[ex]];
+$('exb').innerHTML=EX.map((e,i)=>`<button class="btn ex" data-i="${i}" style="flex:1">${'ABCD'[i]}. ${e.n}</button>`).join('');
+document.querySelectorAll('.ex').forEach(b=>b.onclick=()=>{if(run)return;ex=+b.dataset.i;sync();});
+function sync(){document.querySelectorAll('.ex').forEach((b,i)=>b.classList.toggle('on',i==ex));const r=$('rg');r.max=EX[ex].v.length-1;r.value=vi[ex];$('sl').textContent='Variabel: '+['Suhu air','Konsentrasi larutan asam','Bentuk padatan','Katalis'][ex]+' = '+EX[ex].lb(val());prog=0;bub=[];initP();draw()}
+$('rg').oninput=()=>{if(run)return;vi[ex]=+$('rg').value;sync();sfx.pop()};
+$('go').onclick=()=>{if(run)return;prog=0;bub=[];run=true;tdur=EX[ex].t(val())/10;$('go').disabled=$('rg').disabled=true};
+$('rs').onclick=()=>{run=false;rec=[[],[],[],[]];vi=[0,0,0,0];$('go').disabled=$('rg').disabled=false;sync();draw();toast('Simulasi direset')};
+/* partikel */
+let P=[];
+function cond(){return{T:ex==0?val():30,C:ex==1?val():2,cat:ex==3&&val()==1}}
+function initP(){const c=cond(),n=12*c.C;P=[];for(let i=0;i<n;i++)P.push({x:100+Math.random()*380,y:150+Math.random()*190,a:Math.random()*6.28})}
+function solids(){if(ex==2){const v=val();if(v==1)return[[290,330,90,50]];if(v==3)return[...Array(6)].map((_,i)=>[170+i*48,342,30,28]);return[...Array(36)].map((_,i)=>[150+(i%12)*27,350-Math.floor(i/12)*10,9,9])}return[[250,325,80,55]]}
+function loop(t){const dt=Math.min(.05,(t-(loop.l||t))/1000);loop.l=t;if(run){prog+=dt/tdur;if(Math.random()<dt*14)sfx.pop();if(prog>=1){prog=1;run=false;finish()}}step(dt);draw();requestAnimationFrame(loop)}
+function step(dt){const c=cond(),sp=Math.sqrt((c.T+273)/293)*70,S=solids();P.forEach(p=>{p.x+=Math.cos(p.a)*sp*dt;p.y+=Math.sin(p.a)*sp*dt;if(p.x<86||p.x>474){p.a=Math.PI-p.a;p.x=Math.min(474,Math.max(86,p.x))}if(p.y<140||p.y>372){p.a=-p.a;p.y=Math.min(372,Math.max(140,p.y))}if(run&&Math.random()<.02*sp*dt*(c.cat?1.8:1)){const s=S[Math.floor(Math.random()*S.length)];if(Math.abs(p.x-(s[0]+s[2]/2))<s[2]/2+14&&p.y>s[1]-16)spk.push({x:p.x,y:p.y,l:.35})}});
+if(run&&Math.random()<dt*(6/tdur)*3)bub.push({x:130+Math.random()*320,y:360,r:2+Math.random()*3});bub.forEach(b=>{b.y-=60*dt;b.x+=Math.sin(b.y/9)*.4});bub=bub.filter(b=>b.y>130);spk.forEach(s=>s.l-=dt);spk=spk.filter(s=>s.l>0)}
+const cv=$('cv'),cx=cv.getContext('2d');
+function draw(){const c=cond();cx.clearRect(0,0,580,400);
+cx.fillStyle='#f7fbfa';cx.fillRect(0,0,580,400);
+cx.fillStyle=c.cat?'rgba(242,177,52,.28)':'rgba(70,160,200,.28)';cx.fillRect(80,130,400,250);
+cx.strokeStyle='#12353b';cx.lineWidth=4;cx.beginPath();cx.moveTo(80,50);cx.lineTo(80,380);cx.lineTo(480,380);cx.lineTo(480,50);cx.stroke();
+const T=c.T;cx.fillStyle='rgb('+(80+T*2)+',60,'+(200-T*2)+')';
+P.forEach(p=>{cx.fillStyle=c.cat?'#e0870c':'rgb('+Math.min(255,60+(T-20)*5)+',90,'+Math.max(80,210-(T-20)*3)+')';cx.beginPath();cx.arc(p.x,p.y,4.5,0,6.28);cx.fill()});
+const k=1-prog*.95;cx.fillStyle='#8a6a4f';solids().forEach(s=>{const w=s[2]*k,h=s[3]*k;cx.fillRect(s[0]+(s[2]-w)/2,s[1]+(s[3]-h)+0,w,h)});
+cx.strokeStyle='rgba(255,255,255,.9)';bub.forEach(b=>{cx.beginPath();cx.arc(b.x,b.y,b.r,0,6.28);cx.stroke()});
+spk.forEach(s=>{cx.fillStyle='rgba(255,210,60,'+s.l*2.5+')';cx.beginPath();cx.arc(s.x,s.y,9*(1-s.l),0,6.28);cx.fill()});
+cx.fillStyle='#12262a';cx.font='bold 15px Trebuchet MS';cx.fillText('Kondisi: '+EX[ex].lb(val()),14,26);
+const t=EX[ex].t(val())*prog;cx.fillText('Waktu simulasi: '+fmt(t,1)+' s',14,48);
+cx.fillStyle='#c9d8d4';cx.fillRect(14,386,552,8);cx.fillStyle='#2f9e5b';cx.fillRect(14,386,552*prog,8);
+if(!run&&prog==0){cx.fillStyle='#456';cx.font='13px Trebuchet MS';cx.fillText('Atur variabel, lalu tekan Jalankan.',300,26)}}
+function finish(){sfx.ok();const v=val(),t=EX[ex].t(v),r=rec[ex].filter(x=>x.v!=v);r.push({v,t});r.sort((a,b)=>a.v-b.v);rec[ex]=r;$('go').disabled=$('rg').disabled=false;table();chart();toast('Selesai: '+EX[ex].lb(v)+' → '+fmt(t,1)+' s')}
+function table(){const R=rec[ex];$('tt').textContent='Tabel hasil — Eksperimen '+'ABCD'[ex]+' ('+EX[ex].n+')';
+if(!R.length){$('tbl').innerHTML='<p>Belum ada data. Jalankan simulasi.</p>';$('nt').textContent='';return}
+const r0=1/R[0].t;$('tbl').innerHTML='<table><tr><th>No</th><th>Kondisi</th><th>Waktu (s)</th><th>Laju relatif (s⁻¹)</th><th>× dibanding pertama</th></tr>'+R.map((x,i)=>`<tr><td>${i+1}</td><td>${EX[ex].lb(x.v)}</td><td>${fmt(x.t,1)}</td><td>${fmt(1/x.t)}</td><td>${fmt(1/x.t/r0,2)}</td></tr>`).join('')+'</table>';
+$('nt').textContent=R.length>1?'Temuan: '+EX[ex].k:'Jalankan nilai variabel lain untuk membandingkan.'}
+function chart(){const c=$('ch'),g=c.getContext('2d'),R=rec[ex],V=EX[ex].v,mx=EX[ex].t(V[0]);g.clearRect(0,0,620,210);g.fillStyle='#f7fbfa';g.fillRect(0,0,620,210);
+g.strokeStyle='#9fb9b4';g.fillStyle='#12262a';g.font='12px Trebuchet MS';g.beginPath();g.moveTo(52,14);g.lineTo(52,170);g.lineTo(600,170);g.stroke();
+for(let i=0;i<=4;i++){const y=170-i*38;g.fillText(fmt(mx*i/4*1.0,0),20,y+4);g.strokeStyle='#e1ebe8';g.beginPath();g.moveTo(52,y);g.lineTo(600,y);g.stroke()}
+g.save();g.translate(10,120);g.rotate(-Math.PI/2);g.fillText('Waktu (s)',0,0);g.restore();
+const X=v=>V.length>1?80+V.indexOf(v)*(490/(V.length-1)):300,Y=t=>170-t/mx*152;
+V.forEach(v=>{g.fillStyle='#12262a';g.textAlign='center';g.fillText(EX[ex].lb(v).replace('Konsentrasi ',''),X(v),188);g.textAlign='left'});
+g.strokeStyle='#c4452f';g.lineWidth=2.5;g.beginPath();R.forEach((p,i)=>i?g.lineTo(X(p.v),Y(p.t)):g.moveTo(X(p.v),Y(p.t)));g.stroke();
+R.forEach(p=>{g.fillStyle='#0d4c55';g.beginPath();g.arc(X(p.v),Y(p.t),5,0,6.28);g.fill();g.fillStyle='#12262a';g.fillText(fmt(p.t,1),X(p.v)+7,Y(p.t)-7)})}
+/* kalkulator */
+let calc=['',''];
+$('b1').onclick=()=>{const a=+$('c0').value,b=+$('c1').value,d=+$('dt').value;if(!d)return toast('Δt tidak boleh 0');const v=-(b-a)/-d*-1;const r=(a-b)/d;$('o1').textContent='v = '+fmt(r,5)+' mol L⁻¹ s⁻¹';calc[0]=`Delta[A] = ${fmt(b-a,4)} mol/L; v = -(${fmt(b-a,4)})/${d} = ${fmt(r,5)} mol L^-1 s^-1`;sfx.ok()};
+$('b2').onclick=()=>{const v1=+$('v1').value,a=+$('t1').value,b=+$('t2').value,r=v1*Math.pow(2,(b-a)/10);$('o2').textContent='v₂ = '+fmt(r,5)+' mol L⁻¹ s⁻¹';calc[1]=`v2 = ${v1} x 2^((${b}-${a})/10) = ${fmt(r,5)} mol L^-1 s^-1 (naik ${fmt(r/v1,2)} kali)`;sfx.ok()};
+/* kuis */
+const Q=[
+{q:'[A] turun dari 0,80 ke 0,20 mol L⁻¹ dalam 30 s. Laju rata-ratanya?',o:['0,020 mol L⁻¹ s⁻¹','0,060 mol L⁻¹ s⁻¹','0,600 mol L⁻¹ s⁻¹','0,027 mol L⁻¹ s⁻¹'],a:0},
+{q:'Laju 0,020 mol L⁻¹ s⁻¹ pada 25°C dan menjadi 2× tiap naik 10°C. Laju pada 45°C?',o:['0,040','0,060','0,080','0,160'],a:2},
+{q:'Serbuk bereaksi lebih cepat daripada bongkahan karena…',o:['Energi aktivasinya turun','Bidang kontak lebih luas','Suhunya naik','Konsentrasinya naik'],a:1},
+{q:'Katalis mempercepat reaksi dengan cara…',o:['Menaikkan suhu','Menambah pereaksi','Menurunkan energi aktivasi','Habis bereaksi'],a:2},
+{q:'"Semua reaksi menjadi 2× lebih cepat tiap naik 10°C." Pernyataan ini…',o:['Benar untuk semua reaksi','Hanya pendekatan, perlu data eksperimen','Benar untuk gas saja','Salah karena laju turun'],a:1}];
+let qi=0,qa=[];
+function quiz(){const el=$('qz');if(qi>=Q.length){const s=qa.filter((x,i)=>x==Q[i].a).length;$('qs').textContent='';el.innerHTML=`<p style="margin-top:14px">Skor kuismu</p><p class="big" style="font-size:44px">${s} / ${Q.length}</p><button class="btn" id="qr" style="margin-top:10px">Ulangi kuis</button>`;$('qr').onclick=()=>{qi=0;qa=[];quiz()};return}
+const q=Q[qi];$('qs').textContent=`(${qi+1}/${Q.length})`;el.innerHTML=`<p style="margin-bottom:6px"><b>${q.q}</b></p>`+q.o.map((t,i)=>`<button class="btn opt" data-i="${i}">${'ABCD'[i]}. ${t}</button>`).join('');
+el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;qa[qi]=i;el.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.i==q.a)x.classList.add('good')});if(i!=q.a){b.classList.add('bad');sfx.no()}else sfx.ok();setTimeout(()=>{qi++;quiz()},1100)})}
+/* PDF */
+function clean(s){return String(s).replace(/⁻¹/g,'^-1').replace(/Δ/g,'Delta ').replace(/[’‘]/g,"'").replace(/[—–−]/g,'-').replace(/[₁₂]/g,m=>m=='₁'?'1':'2').replace(/[^\x20-\x7e\xa0-\xff]/g,'?')}
+const esc=s=>clean(s).replace(/[\\()]/g,'\\$&');
+function chartPDF(){const T=(x,y,s,z=9)=>`BT /F1 ${z} Tf 1 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)} Tm (${esc(s)}) Tj ET\n`;let c='0 g\n'+T(50,812,'GRAFIK HASIL EKSPERIMEN (waktu reaksi, data simulasi)',12);
+EX.forEach((e,i)=>{const ox=50+(i%2)*265,top=785-Math.floor(i/2)*350,x0=ox+38,y0=top-240,W=210,H=170,R=rec[i],V=e.v,mx=e.t(V[0]);
+c+='0 g\n'+T(ox,top-8,'Eksperimen '+'ABCD'[i]+' - '+e.n,10)+'0.6 G 0.8 w '+x0+' '+y0+' m '+(x0+W)+' '+y0+' l S '+x0+' '+y0+' m '+x0+' '+(y0+H)+' l S\n';
+[0,.5,1].forEach(k=>{c+=T(ox,y0+k*H-3,fmt(mx*k,0))});c+=T(ox,y0+H+10,'s');
+const X=v=>V.length>1?x0+25+V.indexOf(v)*(W-50)/(V.length-1):x0+W/2,Y=t=>y0+t/mx*H;
+V.forEach(v=>c+=T(X(v)-14,y0-13,e.lb(v).replace('Konsentrasi ','').replace('Dengan katalis','Katalis').replace('Tanpa katalis','Tanpa'),8));
+if(!R.length)c+=T(x0+50,y0+H/2,'(belum ada data)',9);
+R.forEach((p,j)=>{if(j)c+='0.77 0.27 0.18 RG 2 w '+X(R[j-1].v)+' '+Y(R[j-1].t)+' m '+X(p.v)+' '+Y(p.t)+' l S\n'});
+R.forEach(p=>{c+='0.05 0.3 0.33 rg '+(X(p.v)-3)+' '+(Y(p.t)-3)+' 6 6 re f\n0 g\n'+T(X(p.v)+4,Y(p.t)+5,fmt(p.t,1)+' s',8)})});return c}
+function mkpdf(lines){const L=[];lines.forEach(s=>{s=clean(s);if(!s){L.push('');return}while(s.length>88){let k=s.lastIndexOf(' ',88);if(k<20)k=88;L.push(s.slice(0,k));s=s.slice(k).trim()}L.push(s)});
+const pg=[];for(let i=0;i<L.length;i+=50)pg.push('BT /F1 11 Tf 14 TL 50 790 Td\n'+L.slice(i,i+50).map(l=>'('+esc(l)+') Tj T*').join('\n')+'\nET');pg.push(chartPDF());const o=[];o[1]='<</Type/Catalog/Pages 2 0 R>>';o[2]='<</Type/Pages/Kids['+pg.map((_,i)=>(4+i*2)+' 0 R').join(' ')+']/Count '+pg.length+'>>';o[3]='<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>';
+pg.forEach((c,i)=>{o[4+i*2]='<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<</Font<</F1 3 0 R>>>>/Contents '+(5+i*2)+' 0 R>>';o[5+i*2]='<</Length '+c.length+'>>\nstream\n'+c+'\nendstream'});
+let out='%PDF-1.4\n';const off=[];for(let i=1;i<o.length;i++){off[i]=out.length;out+=i+' 0 obj\n'+o[i]+'\nendobj\n'}const x=out.length;
+out+='xref\n0 '+o.length+'\n0000000000 65535 f \n'+off.slice(1).map(v=>String(v).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<</Size '+o.length+'/Root 1 0 R>>\nstartxref\n'+x+'\n%%EOF';
+return new Blob([Uint8Array.from(out,ch=>ch.charCodeAt(0)&255)],{type:'application/pdf'})}
+$('pdf').onclick=()=>{const nm=$('nm').value.trim();if(!nm){toast('Isi nama dulu di kolom Identitas');sfx.no();return}
+const L=['LAPORAN LAB MAYA LAJU REAKSI','Misi Ilmuwan Muda - SMA Negeri 2 Tebing Tinggi','','Nama   : '+nm,'Kelas  : '+$('kl').value,'Tanggal: '+new Date().toLocaleDateString('id-ID'),'','A. PREDIKSI AWAL',$('pr').value||'-','','B. DATA EKSPERIMEN (data simulasi)'];
+EX.forEach((e,i)=>{L.push('','Eksperimen '+'ABCD'[i]+' - '+e.n);if(!rec[i].length)L.push('  (belum ada data)');rec[i].forEach((x,j)=>L.push(`  ${j+1}. ${e.lb(x.v)} | waktu ${fmt(x.t,1)} s | laju relatif ${fmt(1/x.t)} /s`))});
+L.push('','C. KALKULATOR',calc[0]||'-',calc[1]||'-','','D. KESIMPULAN',$('ks').value||'-','','E. KUIS');
+const sc=qa.filter((x,i)=>x==Q[i].a).length;L.push('Skor: '+sc+' / '+Q.length+(qa.length<Q.length?' (belum selesai)':''));Q.forEach((q,i)=>{if(qa[i]!==undefined)L.push(`  No. ${i+1}: ${qa[i]==q.a?'Benar':'Salah'}`)});
+L.push('','F. REFLEKSI','Pemahaman: '+$('rf').value,'Pengetahuan baru: '+($('rf2').value||'-'));
+const fn='Hasil-Lab-Maya-Laju-Reaksi-'+nm.replace(/\W+/g,'_')+'.pdf',blob=mkpdf(L);
+(window.claude&&claude.use?claude.use('downloads'):Promise.resolve(null)).then(d=>{if(d)return d.save({filename:fn,data:blob});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();a.remove()}).then(()=>{sfx.ok();toast('PDF diunduh')}).catch(e=>toast(e&&e.code=='declined'?'Unduhan dibatalkan':'PDF tidak dapat diunduh di sini'))};
+for(let i=0;i<16;i++){const b=document.createElement('i'),s=14+Math.random()*34;b.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;animation-delay:${-Math.random()*8}s;animation-duration:${6+Math.random()*5}s`;$('sp').appendChild(b)}
+$('mulai').onclick=()=>{sfx.ok();$('sp').classList.add('out')};
+sync();table();chart();quiz();requestAnimationFrame(loop);
+</script></body></html>
